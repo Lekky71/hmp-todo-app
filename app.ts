@@ -63,12 +63,6 @@ app.get('/students', (req: express.Request, res: express.Response) => {
   return res.status(404).send('Page Not Found');
 });
 
-// post request
-app.post('/students', (req: express.Request, res: express.Response) => {
-  console.log(req.body);
-  return res.status(201).send('Student record successfully created');
-});
-
 app.post('/todos', async (req: express.Request, res: express.Response) => {
   const { title, content, tags, author } = req.body;
   if (!title || !author) {
