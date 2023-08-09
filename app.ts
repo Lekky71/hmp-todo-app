@@ -29,6 +29,9 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import { TodoModel } from './src/models/todo';
+import { firstDocument, secondDocument } from './src/sample.data';
 
 const app = express();
 app.use(bodyParser.json());
@@ -66,8 +69,50 @@ app.post('/students', (req: express.Request, res: express.Response) => {
   return res.status(201).send('Student record successfully created');
 });
 
-app.listen(5672, () => {
+app.post('/todos', async (req: express.Request, res: express.Response) => {
+  const { title, content, tags, author } = req.body;
+  if (!title || !author) {
+    return res.status(400).send({ message: 'Title and author are required' });
+  }
+  if (title.length < 5 || title.length > 40) {
+    return res.status(400).send({ message: 'Title must be between 5 and 40 characters' });
+  }
+  const createdTodo = await TodoModel.create({
+    title,
+    content,
+    tags,
+    author,
+  });
+  return res.status(201).send(createdTodo);
+});
+
+app.get('/todos', async (req: express.Request, res: express.Response) => {
+  const todos = await TodoModel.find();
+  return res.status(200).send(todos);
+});
+
+// Update a particular item
+app.put('/todos/:id', async (req: express.Request, res: express.Response) => {
+  const { id } = req.params;
+  const { title, content } = req.body;
+  const todo = await TodoModel.findById(id);
+  if (!todo) {
+    return res.status(404).send({ message: 'Todo not found' });
+  }
+  if (title) {
+    todo.title = title;
+  }
+  if (content) {
+    todo.content = content;
+  }
+  await todo.save();
+  return res.status(200).send(todo);
+});
+
+app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
+  await mongoose.connect('mongodb://127.0.0.1/hmp-todo-app');
+  console.log('Connected to MongoDB');
 });
 
 export {};
