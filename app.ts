@@ -109,6 +109,8 @@ app.put('/todos/:id', async (req: express.Request, res: express.Response) => {
   return res.status(200).send(todo);
 });
 
+// ASSIGNMENT: Create an endpoint to delete an item
+
 app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
   await mongoose.connect('mongodb://127.0.0.1/hmp-todo-app');
