@@ -173,3 +173,9 @@ app.listen(5672, async () => {
 });
 
 export {};
+
+// ASSIGNMENT: Tested and working. You should create a Pull Request to my repo
+// 1. Create a new endpoint that receives a city name and returns a list of developers on GitHub in that city. e.g [q=location:nigeria]
+// 2. Create a new endpoint that receives a username and returns the user's profile information.
+// 3. Create a new endpoint that receives a GitHub repository URL and then returns the programming languages used in that repository.
+// [https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-languages]
