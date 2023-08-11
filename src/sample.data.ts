@@ -12,3 +12,8 @@ export const secondDocument = {
   tags: ['node', 7, 'javascript'],
   author: 'Harrison',
 };
+
+console.log(firstDocument);
+console.log(secondDocument);
+// process.env is used to access environment variables in NodeJs
+console.log(process.env.NODE_ENV);
