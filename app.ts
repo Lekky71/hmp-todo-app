@@ -165,7 +165,52 @@ app.get('/github/users', async (req: express.Request, res: express.Response) => 
     return res.status(500).send({ message: 'An error occurred' });
   }
 });
+// Assignment 1- List of Github devs in a city.
+app.get ('/github/users/in/:city', async (req: express.Reqeust, res: express.Response) => {
+const {city} = req.params;
+try {
+    const result = await searchGitHubUsers ({
+        searchTerm: `Location:${city}`,
+        page: 1,
+        perPage: 10,
+        sort: 'followers',
+        order: 'desc'
 
+    });
+    const refinedItems = result.items.map((item: any) => {
+        return {
+            login:item.login,
+            avatar_url: item.avatar_url,
+            url: item.url,
+        };
+    });
+    return res.status(200).send({
+        total_count: result.total_count,
+        incomplete_results: result.incomplete_results,
+        items: refinedItems,
+    });
+} catch (error: any) {
+    console.log(error.response);
+    return res.status(500).send({message: 'An error occured'});
+}
+})
+// Assignment 2  Get users profile information
+app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
+    const {username} = req.params;
+    try {
+        const newResult = await getGitHubUser(username);
+        const newRefinedResult = {
+            name: newResult.name,
+            bio: newResult.bio,
+            location: newResult.location,
+            followers: newResult.followers
+        };
+        return res.status(200).send(newRefinedResult);
+    } catch (error: any) {
+        console.log(error.response);
+        return res.status(500).send({message: 'An error occured'});
+    } 
+})
 app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
   await mongoose.connect('mongodb://127.0.0.1/hmp-todo-app');
