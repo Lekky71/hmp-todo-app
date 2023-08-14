@@ -196,9 +196,27 @@ try {
 }
 })
 app.get('/github/users/:profile', async (req: express.Request, res: express.Response) => {
-    const {name, bio, location , followers} = req.query;
+    const {profile} = req.params;
     try {
-        const newResult = await GitHubGetProfile({
+      const newResult = await GitHubGetProfile(profile);
+      const newRefinedResult = {
+          name: newResult.name,
+          bio: newResult.bio,
+          location: newResult.location,
+          followers: newResult.followers
+      };
+      return res.status(200).send(newRefinedResult);
+    
+      } catch (e: any) {
+        console.log(e.response);
+        return res.status(500).send({ message: 'An error occurred' });
+      }
+            
+       
+   
+});
+/*
+ const newResult = await GitHubGetProfile({
             name: name as string,
             bio: bio as string,
             location: location as string,
@@ -217,15 +235,7 @@ app.get('/github/users/:profile', async (req: express.Request, res: express.Resp
           incomplete_results:newResult.incomplete_results,
           items: refinedItems,
         });
-    
-      } catch (e: any) {
-        console.log(e.response);
-        return res.status(500).send({ message: 'An error occurred' });
-      }
-            
-       
-   
-});
+*/
 /*
 // Assignment 3 Get user's programming language through url
 app.get('/github/languages/:url', async(req: express.Request, res: express.Response) => {
