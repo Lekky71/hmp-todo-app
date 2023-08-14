@@ -29,3 +29,7 @@ export interface GitHubUser {
 enum Type {
   User = "User",
 }
+
+export type GetGitHubLanguagesResponse = {
+  [key: string]: number;
+}

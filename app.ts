@@ -26,7 +26,7 @@
 // HOST
 // PORT
 // http://127.0.0.1:3000
-import { searchGitHubUsers } from './src/client/github.client';
+import { getGitHubUserProfile, searchGitHubUsers } from './src/client/github.client';
 
 require('dotenv').config();
 import express from 'express';
@@ -34,6 +34,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import { TodoModel } from './src/models/todo';
 import { firstDocument, secondDocument } from './src/sample.data';
+import todoRouter from './src/routes/todo';
 
 const app = express();
 app.use(bodyParser.json());
@@ -65,75 +66,7 @@ app.get('/students', (req: express.Request, res: express.Response) => {
   return res.status(404).send('Page Not Found');
 });
 
-app.post('/todos', async (req: express.Request, res: express.Response) => {
-  const { title, content, tags, author } = req.body;
-  if (!title || !author) {
-    return res.status(400).send({ message: 'Title and author are required' });
-  }
-  if (title.length < 5 || title.length > 40) {
-    return res.status(400).send({ message: 'Title must be between 5 and 40 characters' });
-  }
-  const createdTodo = await TodoModel.create({
-    title,
-    content,
-    tags,
-    author,
-  });
-  return res.status(201).send(createdTodo);
-});
-
-app.get('/todos', async (req: express.Request, res: express.Response) => {
-  const todos = await TodoModel.find();
-  return res.status(200).send(todos);
-});
-
-// Update a particular item
-app.put('/todos/:id', async (req: express.Request, res: express.Response) => {
-  const { id } = req.params;
-  const { title, content } = req.body;
-  const todo = await TodoModel.findById(id);
-  if (!todo) {
-    return res.status(404).send({ message: 'Todo not found' });
-  }
-  if (title) {
-    todo.title = title;
-  }
-  if (content) {
-    todo.content = content;
-  }
-  await todo.save();
-  return res.status(200).send(todo);
-});
-
-// Get an item by ID
-app.get('/todos/:id', async (req: express.Request, res: express.Response) => {
-  const { id } = req.params;
-  try {
-    const todo = await TodoModel.findById(id);
-    if (!todo) {
-      return res.status(404).send({ message: 'Todo not found' });
-    }
-    return res.status(200).send(todo);
-  } catch (e) {
-    return res.status(400).send({ message: 'Invalid ID' });
-  }
-});
-
-// Delete an item by ID
-app.delete('/todos/:todoId', async (req: express.Request, res: express.Response) => {
-  const { todoId } = req.params;
-  try {
-    const todo = await TodoModel.findById(todoId);
-    if (!todo) {
-      return res.status(404).send({ message: 'Todo not found' });
-    }
-    // then delete
-    await todo.deleteOne();
-    return res.status(200).send({ message: 'Todo deleted successfully' });
-  } catch (e) {
-    return res.status(400).send({ message: 'Invalid ID' });
-  }
-});
+app.use('/todos', todoRouter);
 
 app.get('/github/users', async (req: express.Request, res: express.Response) => {
   // Search for GitHub users
@@ -162,6 +95,18 @@ app.get('/github/users', async (req: express.Request, res: express.Response) => 
 
   } catch (e: any) {
     console.log(e.response);
+    return res.status(500).send({ message: 'An error occurred' });
+  }
+});
+
+app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
+  const username = req.params.username;
+  try {
+    const result = await getGitHubUserProfile(username);
+    console.log(result);
+    return res.status(200).send(result);
+  } catch (e: any) {
+    console.log(e);
     return res.status(500).send({ message: 'An error occurred' });
   }
 });
