@@ -27,6 +27,7 @@
 // PORT
 // http://127.0.0.1:3000
 import { searchGitHubUsers } from './src/client/github.client';
+import { GitHubGetUsername } from './src/client/github.username';
 
 require('dotenv').config();
 import express from 'express';
@@ -165,7 +166,66 @@ app.get('/github/users', async (req: express.Request, res: express.Response) => 
     return res.status(500).send({ message: 'An error occurred' });
   }
 });
+// Github users in the city
+app.get ('/github/users/in/:city', async (req: express.Request, res: express.Response) => {
+const {city} = req.params;
+try {
+    const result = await searchGitHubUsers ({
+        searchTerm: `Location:${city}`,
+        page: 1,
+        perPage: 10,
+        sort: 'followers',
+        order: 'desc'
 
+    });
+    const refinedItems = result.items.map((item: any) => {
+        return {
+            login:item.login,
+            avatar_url: item.avatar_url,
+            url: item.url,
+        };
+    });
+    return res.status(200).send({
+        total_count: result.total_count,
+        incomplete_results: result.incomplete_results,
+        items: refinedItems,
+    });
+} catch (error: any) {
+    console.log(error.response);
+    return res.status(500).send({message: 'An error occured'});
+}
+})
+app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
+    const {name, bio, location , followers} = req.query;
+    try {
+        const newResult = await GitHubGetUsername({
+            name: name as string,
+            bio: bio as string,
+            location: location as string,
+            followers: followers as string
+        });
+        const refinedItems = newResult.items.map((item: any) => {
+          return {
+            name: item.name,
+            bio: item.bio,
+            location: item.location,
+            followers: item.followers,
+          };
+        });
+        return res.status(200).send({
+          total_count: newResult.total_count,
+          incomplete_results:newResult.incomplete_results,
+          items: refinedItems,
+        });
+    
+      } catch (e: any) {
+        console.log(e.response);
+        return res.status(500).send({ message: 'An error occurred' });
+      }
+            
+       
+   
+})
 app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
   await mongoose.connect('mongodb://127.0.0.1/hmp-todo-app');

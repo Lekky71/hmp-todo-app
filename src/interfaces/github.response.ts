@@ -7,6 +7,11 @@ export interface GitHubGetUsersResponse {
 export interface GitHubUser {
   login: string;
   id: number;
+  name: string;
+  bio: string;
+  location: string;
+  page: string;
+  followers: string;
   node_id: string;
   avatar_url: string;
   gravatar_id: string;
