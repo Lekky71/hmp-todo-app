@@ -27,7 +27,8 @@
 // PORT
 // http://127.0.0.1:3000
 import { searchGitHubUsers } from './src/client/github.client';
-import { GitHubGetProfile } from './src/client/github.profile';
+import { getGitHubRepoLanguage } from './src/client/github.client';
+
 
 require('dotenv').config();
 import express from 'express';
@@ -195,10 +196,11 @@ try {
     return res.status(500).send({message: 'An error occured'});
 }
 })
-app.get('/github/users/:profile', async (req: express.Request, res: express.Response) => {
-    const {profile} = req.params;
+/*
+app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
+    const {username} = req.params;
     try {
-      const newResult = await GitHubGetProfile(profile);
+      const newResult = await GetGitHubUserProfile(username);
       const newRefinedResult = {
           name: newResult.name,
           bio: newResult.bio,
@@ -211,10 +213,25 @@ app.get('/github/users/:profile', async (req: express.Request, res: express.Resp
         console.log(e.response);
         return res.status(500).send({ message: 'An error occurred' });
       }
-            
-       
-   
+    
 });
+*/
+app.get('/github/repos/:owner/:repo/languages', async (req: express.Request, res: express.Response) => {
+  const {repo, owner} = req.params;
+  try{
+    const result = await getGitHubRepoLanguage({
+      repo : repo as string,
+      owner: owner as string,
+    });
+   console.log(result);
+   return res.status(200).send(result);
+
+  } catch (error: any) {
+    console.log(error.response);
+    return res.status(500).send({message: 'An error occured'});
+}
+}); 
+
 /*
  const newResult = await GitHubGetProfile({
             name: name as string,
