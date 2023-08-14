@@ -1,17 +1,17 @@
 // Lazy Loading
 import dotenv from 'dotenv';
+<<<<<<< HEAD
 import fetch from 'node-fetch';
 import { GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from '../interfaces/github.response';
 
+=======
+>>>>>>> 25af3586a6a7fe5994f510a87dd9eb692ab92af1
 
 
-export type SearchGitHubUsersRequest = {
-  searchTerm: string;
-  sort?: string;
-  order?: 'asc' | 'desc';
-  perPage?: number;
-  page?: number;
-}
+import fetch from 'node-fetch';
+import { GitHubGetUsersResponse } from '../interfaces/github.response';
+import { SearchGitHubUsersRequest } from '../interfaces/github.client';
+
 
 export const searchGitHubUsers = async (request: SearchGitHubUsersRequest): Promise<GitHubGetUsersResponse> => {
   const { searchTerm, sort, order, perPage, page } = request;
@@ -66,6 +66,17 @@ export const GetGitHubUserProfile = async (username: string) => {
   return await response.json();
 }
 */
+
+export const getGitHubUserProfile = async (username: string) => {
+  let url = `https://api.github.com/users/${username}`;
+  const response = await fetch(url, {
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': `Bearer ${process.env.GITHUB_API_TOKEN}`
+    }
+  });
+  return await response.json();
+}
 
 // searchGitHubUsers({
 //   searchTerm: 'bolu',

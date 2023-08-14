@@ -34,6 +34,3 @@ export interface GitHubUser {
 enum Type {
   User = "User",
 }
-export interface GetGitHubRepoLanguageResponse {
-  [key:string] : number;
-}
