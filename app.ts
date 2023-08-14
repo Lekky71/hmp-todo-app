@@ -27,7 +27,7 @@
 // PORT
 // http://127.0.0.1:3000
 import { searchGitHubUsers } from './src/client/github.client';
-import { GitHubGetUsername } from './src/client/github.username';
+import { GitHubGetProfile } from './src/client/github.profile';
 
 require('dotenv').config();
 import express from 'express';
@@ -195,10 +195,10 @@ try {
     return res.status(500).send({message: 'An error occured'});
 }
 })
-app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
+app.get('/github/users/:profile', async (req: express.Request, res: express.Response) => {
     const {name, bio, location , followers} = req.query;
     try {
-        const newResult = await GitHubGetUsername({
+        const newResult = await GitHubGetProfile({
             name: name as string,
             bio: bio as string,
             location: location as string,
@@ -225,7 +225,24 @@ app.get('/github/users/:username', async (req: express.Request, res: express.Res
             
        
    
+});
+/*
+// Assignment 3 Get user's programming language through url
+app.get('/github/languages/:url', async(req: express.Request, res: express.Response) => {
+    const {url} = req.params;
+    const refinedResult = Object.entries(result).map(([language, bytes]) => {
+        return {
+          language,
+          percentage: `${((bytes / result.total) * 100).toFixed(2)}%`,
+        };
+      });
+      return res.status(200).send(refinedResult);
+    } catch (e: any) {
+      console.log(e.response);
+      return res.status(500).send({ message: 'An error occurred' });
+    }
 })
+*/
 app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
   await mongoose.connect('mongodb://127.0.0.1/hmp-todo-app');
