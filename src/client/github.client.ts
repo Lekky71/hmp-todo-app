@@ -1,7 +1,11 @@
 // // Lazy Loading
 // import dotenv from 'dotenv';
 
-// import fetch from 'node-fetch';
+import fetch from 'node-fetch';
+import {request} from 'http';
+import { GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from 'src/interfaces/github.response';
+import { SearchGitHubUsersRequest } from 'src/interfaces/github.client';
+
 // import { GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from '../interfaces/github.response';
 // import { SearchGitHubUsersRequest } from '../interfaces/github.client';
 

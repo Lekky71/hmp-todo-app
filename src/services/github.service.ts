@@ -1,12 +1,12 @@
 import {SearchGitHubUsersRequest,GetGitHubRepoLanguageRequest} from '../interfaces/github.client';
 import dotenv from 'dotenv';
 
-import fetch from 'node-fetch';
+
 import { GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from '../interfaces/github.response';
 
 
 
-export const SearchGitHubUsers = async (request: SearchGitHubUsersRequest): Promise<GitHubGetUsersResponse> => {
+export const searchGitHubUsers = async (request: SearchGitHubUsersRequest): Promise<GitHubGetUsersResponse> => {
     const { searchTerm, sort, order, perPage, page } = request;
     // const url = `https://api.github.com/search/users?q=${searchTerm}&sort=${sort}&order=${order}&per_page=${perPage}&page=${page}`;
     let url = `https://api.github.com/search/users?q=${searchTerm}`;
@@ -30,7 +30,7 @@ export const SearchGitHubUsers = async (request: SearchGitHubUsersRequest): Prom
     });
     return await response.json();
 };
-export const GetGitHubRepoLanguage = async (request: GetGitHubRepoLanguageRequest): Promise <GetGitHubRepoLanguageResponse> => {
+export const getGitHubRepoLanguage = async (request: GetGitHubRepoLanguageRequest): Promise <GetGitHubRepoLanguageResponse> => {
     const {owner, repo} = request;
     let url = `https://api.github/repos/${owner}/${repo}/languages`;
     const response = await fetch(url, {
@@ -42,7 +42,7 @@ export const GetGitHubRepoLanguage = async (request: GetGitHubRepoLanguageReques
     // console.log(data);
     return await response.json();
   };
-  export const GetGitHubUserProfile = async (username: string) => {
+  export const getGitHubUserProfile = async (username: string) => {
     let url = `https://api.github.com/users/${username}`;
     const response = await fetch(url, {
       headers: {

@@ -1,10 +1,10 @@
 import express from 'express';
-import { SearchGitHubUsers, GetGitHubRepoLanguage, GetGitHubUserProfile } from '../services/github.service';
+import * as githubService from '../services/github.service'
 
 export const searchGitHubUsersHandler = async (req:express.Request, res:express.Response) => {
     const { searchTerm, page, perPage, sort, order } = req.query;
   try {
-    const result = await SearchGitHubUsers({
+    const result = await githubService.searchGitHubUsers({
       searchTerm: searchTerm as string,
       page: page as unknown as number,
       perPage: perPage as unknown as number,
@@ -32,7 +32,7 @@ export const searchGitHubUsersHandler = async (req:express.Request, res:express.
 export const  GetGitHubRepoLanguageHandler = async (req:express.Request, res:express.Response) => {
     const {repo, owner} = req.params;
     try{
-      const result = await GetGitHubRepoLanguage({
+      const result = await githubService.getGitHubRepoLanguage({
         repo : repo as string,
         owner: owner as string,
       });
@@ -47,7 +47,7 @@ export const  GetGitHubRepoLanguageHandler = async (req:express.Request, res:exp
 export const  GetGitHubUserProfileHandler = async (req:express.Request, res:express.Response) => {
     const username = req.params.username;
     try {
-      const result = await GetGitHubUserProfile(username);
+      const result = await githubService.getGitHubUserProfile(username);
       console.log(result);
       return res.status(200).send(result);
     } catch (e: any) {
@@ -58,7 +58,7 @@ export const  GetGitHubUserProfileHandler = async (req:express.Request, res:expr
 export const searchGitHubUsersCityHandler = async (req:express.Request, res:express.Response) => {
     const {city} = req.params;
 try {
-    const result = await SearchGitHubUsers ({
+    const result = await githubService.searchGitHubUsers ({
         searchTerm: `Location:${city}`,
         page: 1,
         perPage: 10,
