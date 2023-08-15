@@ -6,3 +6,13 @@ export type SearchGitHubUsersRequest = {
   perPage?: number;
   page?: number;
 }
+export type GetUsersInSpecificLocationRequest={
+  //location:string;
+  order?:'asc'|'desc';
+  searchTerm:string;
+}
+
+export type GitHubUserRepoLanguageRequest = {
+  owner : string;
+  repo : string;
+}

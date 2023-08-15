@@ -26,15 +26,17 @@
 // HOST
 // PORT
 // http://127.0.0.1:3000
-import { getGitHubUserProfile, searchGitHubUsers } from './src/client/github.client';
+//import { /*getGitHubUserProfile,*/ /*getUsersInSpecificLocation,*/ /*searchGitHubUsers,*/GetGithubUserRepoLangs } from './src/client/github.client';
 
 require('dotenv').config();
-import express from 'express';
+import express from "express";
+//import * as express from 'express'
 import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import { TodoModel } from './src/models/todo';
 import { firstDocument, secondDocument } from './src/sample.data';
 import todoRouter from './src/routes/todo';
+import github_userRouter from './src/routes/github_user';
 
 const app = express();
 app.use(bodyParser.json());
@@ -65,51 +67,17 @@ app.get('/about', (req: express.Request, res: express.Response) => {
 app.get('/students', (req: express.Request, res: express.Response) => {
   return res.status(404).send('Page Not Found');
 });
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 app.use('/todos', todoRouter);
+app.use('/github', github_userRouter);
 
-app.get('/github/users', async (req: express.Request, res: express.Response) => {
-  // Search for GitHub users
-  const { searchTerm, page, perPage, sort, order } = req.query;
-  try {
-    const result = await searchGitHubUsers({
-      searchTerm: searchTerm as string,
-      page: page as unknown as number,
-      perPage: perPage as unknown as number,
-      sort: sort as string,
-      order: order as ('asc' | 'desc'),
-    });
-    // only return the items login url and avatar_url
-    const refinedItems = result.items.map((item: any) => {
-      return {
-        login: item.login,
-        avatar_url: item.avatar_url,
-        url: item.url,
-      };
-    });
-    return res.status(200).send({
-      total_count: result.total_count,
-      incomplete_results: result.incomplete_results,
-      items: refinedItems,
-    });
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-  } catch (e: any) {
-    console.log(e.response);
-    return res.status(500).send({ message: 'An error occurred' });
-  }
-});
-
-app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
-  const username = req.params.username;
-  try {
-    const result = await getGitHubUserProfile(username);
-    console.log(result);
-    return res.status(200).send(result);
-  } catch (e: any) {
-    console.log(e);
-    return res.status(500).send({ message: 'An error occurred' });
-  }
-});
+app.get('*',(req:express.Request,res:express.Response)=>{
+  return res.status(404).send({message:'error!!!!'})
+})
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
