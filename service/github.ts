@@ -8,20 +8,17 @@ export async function searchGitHubUsers(params: {
   order: 'asc' | 'desc';
 }) {
   const { searchTerm, page, perPage, sort, order } = params;
-  
   const url = `https://api.github.com/search/users?q=${searchTerm}&sort=${sort}&order=${order}&per_page=${perPage}&page=${page}`;
- 
-
   const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  const result = await response.json();
+  return result;
 }
 
 export async function getGitHubUserProfile(username: string) {
   const url = `https://api.github.com/users/${username}`;
   const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  const result = await response.json();
+  return result;
 }
 
 
