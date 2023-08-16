@@ -26,8 +26,7 @@
 // HOST
 // PORT
 // http://127.0.0.1:3000
-// import { getGitHubUserProfile, searchGitHubUsers } from './src/client/github.client';
-import { getGitHubUserProfile, searchGitHubUsers } from './service/github';
+import { getGitHubUserProfile, searchGitHubUsers } from './src/client/github.client';
 
 require('dotenv').config();
 import express from 'express';
@@ -36,7 +35,7 @@ import mongoose from 'mongoose';
 import { TodoModel } from './src/models/todo';
 import { firstDocument, secondDocument } from './src/sample.data';
 import todoRouter from './src/routes/todo';
-import githubRouter from "./routes/github";
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -69,7 +68,49 @@ app.get('/students', (req: express.Request, res: express.Response) => {
 });
 
 app.use('/todos', todoRouter);
-app.use('/github', githubRouter);
+
+app.get('/github/users', async (req: express.Request, res: express.Response) => {
+  // Search for GitHub users
+  const { searchTerm, page, perPage, sort, order } = req.query;
+  try {
+    const result = await searchGitHubUsers({
+      searchTerm: searchTerm as string,
+      page: page as unknown as number,
+      perPage: perPage as unknown as number,
+      sort: sort as string,
+      order: order as ('asc' | 'desc'),
+    });
+    // only return the items login url and avatar_url
+    const refinedItems = result.items.map((item: any) => {
+      return {
+        login: item.login,
+        avatar_url: item.avatar_url,
+        url: item.url,
+      };
+    });
+    return res.status(200).send({
+      total_count: result.total_count,
+      incomplete_results: result.incomplete_results,
+      items: refinedItems,
+    });
+
+  } catch (e: any) {
+    console.log(e.response);
+    return res.status(500).send({ message: 'An error occurred' });
+  }
+});
+
+app.get('/github/users/:username', async (req: express.Request, res: express.Response) => {
+  const username = req.params.username;
+  try {
+    const result = await getGitHubUserProfile(username);
+    console.log(result);
+    return res.status(200).send(result);
+  } catch (e: any) {
+    console.log(e);
+    return res.status(500).send({ message: 'An error occurred' });
+  }
+});
 
 app.listen(5672, async () => {
   console.log('Server is running at http://localhost:5672');
@@ -77,6 +118,7 @@ app.listen(5672, async () => {
   console.log('Connected to MongoDB');
 });
 
+export {};
 
 // ASSIGNMENT: Tested and working. You should create a Pull Request to my repo
 // 1. Create a new endpoint that receives a city name and returns a list of developers on GitHub in that city. e.g [q=location:nigeria]
