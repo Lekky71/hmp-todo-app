@@ -5,30 +5,21 @@ import * as githubService from '../services/github_service';
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //Hashcode's Example.
  // Search for GitHub users
- export const SearchForUsers= async (req: express.Request, res: express.Response) => {
+ export const HandleSearchForUsers= async (req: express.Request, res: express.Response) => {
  const { searchTerm, page, perPage, sort, order } = req.query;
  try {
-   const result = await githubService.searchGitHubUsers({
+   const serviceResult = await githubService.searchUsers({
      searchTerm: searchTerm as string,
      page: page as unknown as number,
      perPage: perPage as unknown as number,
      sort: sort as string,
      order: order as ('asc' | 'desc'),
    });
-   // only return the items login url and avatar_url
-   const refinedItems = result.items.map((item: any) => {
-    return {
-      login: item.login,
-      avatar_url: item.avatar_url,
-      url: item.url,
-    };
-  });
   return res.status(200).send({
-   total_count: result.total_count,
-   incomplete_results: result.incomplete_results,
-   items: refinedItems,
+   total_count: serviceResult.result.total_count,
+   incomplete_results: serviceResult.result.incomplete_results,
+   items: serviceResult.refinedItems,
  });
-
  } catch (e: any) {
    console.log(e.response);
    return res.status(500).send({ message: e.message || "an error occured" });
@@ -39,7 +30,7 @@ import * as githubService from '../services/github_service';
  export const UserbyLocationn = async(req:express.Request,res:express.Response)=>{
         const {order,searchTerm}=req.query
         try{
-          const result = await githubService.getUsersInSpecificLocation({
+          const result = await githubService.searchByLocation({
             
             order: order as ('asc' | 'desc'),
             searchTerm: searchTerm as string,
@@ -55,7 +46,7 @@ import * as githubService from '../services/github_service';
 export const UserProfileinfo = async (req: express.Request, res: express.Response) => {
     const username = req.params.username;
     try {
-      const result = await githubService.getGitHubUserProfile(username);
+      const result = await githubService.getProfileInformation(username);
       //console.log(result);
       return res.status(200).send(result);
     } catch (e: any) {
@@ -68,7 +59,7 @@ export const UserProfileinfo = async (req: express.Request, res: express.Respons
 export const GetRepoLanguages =  async (req:express.Request,res:express.Response)=>{
     const {owner,repo}=req.query;
     try{
-      const result = await githubService.GetGithubUserRepoLangs({
+      const result = await githubService.getLanguagesUsedInRepo({
         owner: owner as string,
         repo: repo as string,
       });

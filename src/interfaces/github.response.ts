@@ -62,6 +62,40 @@ export interface GithubUsers{
   score: number;
 }
 
+export interface GetUserInfomationResponse{
+  login: String;
+  id: number;
+  nodeid: String
+  avatarurl: String
+   gravatarid: String
+   url: String
+   htmlurl: String
+   followersurl: String
+   followingurl: String
+   gistsurl: String
+   starredurl: String
+   subscriptionsurl: String
+   organizationsurl: String
+   reposurl: String
+   eventsurl: String
+   receivedEventsurl: String
+   type: String
+   siteAdmin: Boolean
+   name: String
+   company: String
+   blog: String
+   location: String
+   email: String
+   hireable: Boolean
+   bio: String
+   twitterUsername: String
+   publicRepos: number
+   publicGists: number
+   followers: number
+   following: number
+   createdAt: Date
+   updatedAt: Date
+}
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 /*export interface GitHubUserRepoLang{
   languages:{}
