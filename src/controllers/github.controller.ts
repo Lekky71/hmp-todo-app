@@ -29,14 +29,14 @@ export const searchGitHubUsersHandler = async (req:express.Request, res:express.
     return res.status(500).send({ message: 'An error occurred' });
   }
 };
-export const  GetGitHubRepoLanguageHandler = async (req:express.Request, res:express.Response) => {
-    const {repo, owner} = req.params;
+export const  getGitHubRepoLanguageHandler = async (req:express.Request, res:express.Response) => {
+    const {owner, repo} = req.params;
     try{
       const result = await githubService.getGitHubRepoLanguage({
         repo : repo as string,
         owner: owner as string,
       });
-     console.log(result);
+      console.log(result);
      return res.status(200).send(result);
   
     } catch (error: any) {
@@ -44,7 +44,7 @@ export const  GetGitHubRepoLanguageHandler = async (req:express.Request, res:exp
       return res.status(500).send({message: 'An error occured'});
   } 
 };
-export const  GetGitHubUserProfileHandler = async (req:express.Request, res:express.Response) => {
+export const  getGitHubUserProfileHandler = async (req:express.Request, res:express.Response) => {
     const username = req.params.username;
     try {
       const result = await githubService.getGitHubUserProfile(username);
