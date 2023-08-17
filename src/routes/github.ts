@@ -1,5 +1,5 @@
 import express from 'express';
-import {  getGitHubUserProfileHandler, handleGetUserCity,getGitHubRepoLanguageHandler, HandleGetUsers  } from 'src/controllers/github.controller';
+import {  getGitHubUserProfileHandler, handleGetUserCity,getGitHubRepoLanguageHandler, HandleGetUsers  } from '../controllers/github.controller';
 const router = express.Router();
 
 

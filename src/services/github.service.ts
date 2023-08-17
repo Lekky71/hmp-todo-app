@@ -1,9 +1,9 @@
 // import {SearchGitHubUsersRequest,GetGitHubRepoLanguageRequest} from '../interfaces/github.client';
 
-import { searchGitHubUsers, getGitHubRepoLanguage, getGitHubUserProfile } from "src/client/github.client";
+import { searchGitHubUsers, getGitHubRepoLanguage, getGitHubUserProfile } from "../client/github.client";
 import { GitHubUserRecord, SearchGitHubUsersSvcResponse } from '../interfaces/github';
-import { GetGitHubRepoLanguageRequest, SearchGitHubUsersRequest } from "src/interfaces/github.client";
-import {  GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from "src/interfaces/github.response";
+import { GetGitHubRepoLanguageRequest, SearchGitHubUsersRequest } from "../interfaces/github.client";
+import {  GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from "../interfaces/github.response";
 
 export const searchUsersGitHub = async (request: SearchGitHubUsersRequest): Promise<SearchGitHubUsersSvcResponse> => {
   const result = await searchGitHubUsers(request);
