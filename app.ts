@@ -26,17 +26,12 @@
 // HOST
 // PORT
 // http://127.0.0.1:3000
-require('dotenv').config();
-import express from 'express';
-import bodyParser from 'body-parser';
-import mongoose from 'mongoose';
-import todoRouter from './src/routes/todo';
-import githubRouter from './src/routes/github';
 
 
-const app = express();
-app.use(bodyParser.json());
 
+// import { searchGitHubUsers } from './src/client/github.client';
+// import { getGitHubRepoLanguage } from './src/client/github.client';
+// import { getGitHubUserProfile } from './src/client/github.client';
 // Components of a REST API
 // 1. Resource
 // 2. Endpoint
@@ -48,6 +43,19 @@ app.use(bodyParser.json());
 // Express
 // Route/Endpoint, method, middlewares, handler
 // Example: https://www.google.com/search?q=nigeria+super+falcons&oq=nigeria+super+falcons&gs_lcrp
+
+
+require('dotenv').config();
+import express from 'express';
+import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import { TodoModel } from './src/models/todo';
+import { firstDocument, secondDocument } from './src/sample.data';
+import todoRouter from './src/routes/todo';
+import githubRouter from './src/routes/github';
+
+const app = express();
+app.use(bodyParser.json());
 
 app.get('/', (req: express.Request, res: express.Response) => {
   return res.status(200).send('Hello guys, welcome to Opolo Hub!');
@@ -75,8 +83,3 @@ app.listen(5672, async () => {
 
 export {};
 
-// ASSIGNMENT: Tested and working. You should create a Pull Request to my repo
-// 1. Create a new endpoint that receives a city name and returns a list of developers on GitHub in that city. e.g [q=location:nigeria]
-// 2. Create a new endpoint that receives a username and returns the user's profile information.
-// 3. Create a new endpoint that receives a GitHub repository URL and then returns the programming languages used in that repository.
-// [https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#list-repository-languages]

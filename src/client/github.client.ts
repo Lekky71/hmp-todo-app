@@ -1,11 +1,17 @@
-// Lazy Loading
-import dotenv from 'dotenv';
-
-dotenv.config();
+// // Lazy Loading
+// import dotenv from 'dotenv';
 
 import fetch from 'node-fetch';
-import { GitHubGetUsersResponse } from '../interfaces/github.response';
-import { SearchGitHubUsersRequest } from '../interfaces/github.client';
+import {request} from 'http';
+import {SearchGitHubUsersRequest, GetGitHubRepoLanguageRequest } from '../interfaces/github.client';
+
+
+
+import { GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from '../interfaces/github.response';
+
+
+// import { GetGitHubRepoLanguageResponse, GitHubGetUsersResponse } from '../interfaces/github.response';
+// import { SearchGitHubUsersRequest } from '../interfaces/github.client';
 
 
 export const searchGitHubUsers = async (request: SearchGitHubUsersRequest): Promise<GitHubGetUsersResponse> => {
@@ -33,6 +39,34 @@ export const searchGitHubUsers = async (request: SearchGitHubUsersRequest): Prom
   // console.log(data);
   return await response.json();
 }
+// export interface GetGitHubRepoLanguageRequest {
+//   owner: string,
+//   repo: string,
+// }
+export const getGitHubRepoLanguage = async (request: GetGitHubRepoLanguageRequest): Promise <GetGitHubRepoLanguageResponse> => {
+  const {owner, repo} = request;
+  let url = `https://api.github.com/repos/${owner}/${repo}/languages`;
+  const response = await fetch(url, {
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': `Bearer ${process.env.GITHUB_API_TOKEN}`
+    },
+  });
+  // console.log(data);
+  return await response.json();
+}
+/*
+export const GetGitHubUserProfile = async (username: string) => {
+  let url =  `https://api.github.com/search/users?q=${username}`;
+  const response = await fetch[url, init: {
+    headers: {
+      'Accept': 'application/vnd.github.v3+json',
+      'Authorization': `Bearer ${process.env.GITHUB_API_TOKEN}`
+    }
+  }]
+  return await response.json();
+}
+*/
 
 export const getGitHubUserProfile = async (username: string) => {
   let url = `https://api.github.com/users/${username}`;
@@ -45,6 +79,6 @@ export const getGitHubUserProfile = async (username: string) => {
   return await response.json();
 }
 
-// searchGitHubUsers({
-//   searchTerm: 'bolu',
-// }).then();
+// // searchGitHubUsers({
+// //   searchTerm: 'bolu',
+// // }).then();
