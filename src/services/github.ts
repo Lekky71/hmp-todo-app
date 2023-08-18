@@ -39,11 +39,8 @@ export const getGitHubRepositories = async (request: SearchGitHubRepositoriesReq
     owner: owner,
     repo: repo,
   });
-
-  const languages = Object.keys(result);
-
   return {
-    languages: languages,
+   languages: Object.keys(result)
   };
 };
 

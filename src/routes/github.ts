@@ -2,7 +2,7 @@ import express from 'express';
 import { getGitHubUserProfile, searchGitHubUsers, searchGitHubRepositories} from '../client/github.client';
 import { HandleGetUsers } from '../controllers/github';
 
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 
 router.get('/users', HandleGetUsers);
@@ -17,8 +17,10 @@ router.get('/users/:username', async (req: express.Request, res: express.Respons
     console.log(e);
     return res.status(500).send({ message: 'An error occurred' });
   }
+});
 
 router.get('/repos/:owner/:repo/languages', async (req: express.Request, res: express.Response) => {
+    console.log('Got Here');
     const owner = req.params.owner;
     const repo = req.params.repo;
       try {
@@ -34,18 +36,6 @@ router.get('/repos/:owner/:repo/languages', async (req: express.Request, res: ex
     return res.status(500).send({ message: 'Internal Server Error' });
   }
   });
-});
+
 
 export default router;
-
-
-
-/*
-
-const router = express.Router();
-
-router.get('/users/:username', getGitHubUsername);
-router.get('/repos/:owner/:repo/languages', searchGitHubRepositories);
-
-export default router;
-*/

@@ -70,26 +70,7 @@ app.get('/students', (req: express.Request, res: express.Response) => {
   return res.status(404).send('Page Not Found');
 });
 
-app.get('/users/:username', async (req: express.Request, res: express.Response) => {
-  try {
-    const result = await getGitHubUserProfile(req.params.username);
-    return res.status(200).send(result);
-  } catch (error) {
-    return res.status(500).send('Internal Server Error');
-  }
-}); 
 
-  app.get('/repos/:owner/:repo/languages', async (req: express.Request, res: express.Response) => {
-    try {
-      const { owner, repo } = req.params; // Extract owner and repo from req.params
-      const result = await searchGitHubRepositories({ owner, repo });
-    return res.status(200).send({ 
-      languages: Object.keys(result)
-    });
-  } catch (error) {
-    return res.status(500).send('Internal Server Error');
-  }
-});
 
 app.use('/todos', todoRouter);
 app.use('/github', githubRouter);
