@@ -27,7 +27,8 @@
 // PORT
 // http://127.0.0.1:3000
 // import { getGitHubUserProfile, searchGitHubUsers } from './src/client/github.client';
-import { getGitHubUserProfile, searchGitHubUsers } from './service/github';
+
+import {getGitHubUserProfile, searchGitHubRepositories} from './src/client/github.client'
 
 require('dotenv').config();
 import express from 'express';
@@ -36,7 +37,8 @@ import mongoose from 'mongoose';
 import { TodoModel } from './src/models/todo';
 import { firstDocument, secondDocument } from './src/sample.data';
 import todoRouter from './src/routes/todo';
-import githubRouter from "./routes/github";
+import githubRouter from './src/routes/github'
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -68,6 +70,27 @@ app.get('/students', (req: express.Request, res: express.Response) => {
   return res.status(404).send('Page Not Found');
 });
 
+app.get('/users/:username', async (req: express.Request, res: express.Response) => {
+  try {
+    const result = await getGitHubUserProfile(req.params.username);
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send('Internal Server Error');
+  }
+}); 
+
+  app.get('/repos/:owner/:repo/languages', async (req: express.Request, res: express.Response) => {
+    try {
+      const { owner, repo } = req.params; // Extract owner and repo from req.params
+      const result = await searchGitHubRepositories({ owner, repo });
+    return res.status(200).send({ 
+      languages: Object.keys(result)
+    });
+  } catch (error) {
+    return res.status(500).send('Internal Server Error');
+  }
+});
+
 app.use('/todos', todoRouter);
 app.use('/github', githubRouter);
 
@@ -77,6 +100,7 @@ app.listen(5672, async () => {
   console.log('Connected to MongoDB');
 });
 
+export {};
 
 // ASSIGNMENT: Tested and working. You should create a Pull Request to my repo
 // 1. Create a new endpoint that receives a city name and returns a list of developers on GitHub in that city. e.g [q=location:nigeria]

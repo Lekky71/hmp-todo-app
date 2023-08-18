@@ -41,9 +41,59 @@ export const getGitHubUserProfile = async (username: string) => {
       'Accept': 'application/vnd.github.v3+json',
       'Authorization': `Bearer ${process.env.GITHUB_API_TOKEN}`
     }
-  });
+  })
   return await response.json();
+};
+ 
+
+
+export type SearchGitHubRepositoriesRequest = {
+    owner: string,
+    repo: string
 }
+
+export type SearchGitHubLanguagesResponse = {
+      [key:string]: number,
+    
+}
+
+export type SearchGitHubUsernameRequest = {
+  username: string
+}
+
+export type GitHubUsernameResponse = {
+key: string
+}
+
+export const searchGitHubUsername = async (request: SearchGitHubUsernameRequest): Promise<GitHubUsernameResponse> => {
+const {username} = request;
+
+let url = `https://api.github.com/users/${username}`;
+
+const response = await fetch(url, {
+headers: {
+'Accept': 'application/vnd.github+json',
+'Authorization': `Bearer ${process.env.GITHUB_API_TOKEN}`
+}
+
+});
+return await response.json();
+}
+
+export const searchGitHubRepositories = async (request: SearchGitHubRepositoriesRequest): Promise<SearchGitHubLanguagesResponse> => {
+const { owner, repo } = request;
+
+let url = `https://api.github.com/repos/${owner}/${repo}/languages`;
+const response = await fetch(url, {
+  headers: {
+    'Accept': 'application/vnd.github+json',
+    'Authorization': `Bearer ${process.env.GITHUB_API_TOKEN}`
+  }
+
+});
+return await response.json();
+}
+
 
 // searchGitHubUsers({
 //   searchTerm: 'bolu',
